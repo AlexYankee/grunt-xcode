@@ -149,7 +149,7 @@ module.exports = function(grunt) {
       if(options.arch) command.push('-arch', safelyWrap(options.arch));
       if(options.sdk) command.push('-sdk', safelyWrap(options.sdk));
 
-      if(!options.exportSigningIdentity) command.push('CODE_SIGN_IDENTITY=""', 'CODE_SIGN_ENTITLEMENTS=""', 'CODE_SIGNING_REQUIRED=NO');
+      if(options.exportSigningIdentity === false) command.push('CODE_SIGN_IDENTITY=""', 'CODE_SIGN_ENTITLEMENTS=""', 'CODE_SIGNING_REQUIRED=NO');
 
       if(options.target){
         command.push('-target', safelyWrap(options.target));
@@ -175,9 +175,10 @@ module.exports = function(grunt) {
       command.push('-exportFormat', options.exportFormat);
 
       if(options.exportProvisioningProfile) command.push('-exportProvisioningProfile', safelyWrap(options.exportProvisioningProfile));
-      if(options.exportSigningIdentity) command.push('-exportSigningIdentity', safelyWrap(options.exportSigningIdentity));
+      
+      if(options.exportSigningIdentity && !(options.exportSigningIdentity == 'original')) command.push('-exportSigningIdentity', safelyWrap(options.exportSigningIdentity));
       if(options.exportInstallerIdentity) command.push('-exportInstallerIdentity', safelyWrap(options.exportInstallerIdentity));
-      if(!options.exportSigningIdentity) command.push('-exportWithOriginalSigningIdentity');
+      if(options.exportSigningIdentity == 'original') command.push('-exportWithOriginalSigningIdentity');
 
       grunt.log.write('Exporting: ');
       return executeCommand(command)
